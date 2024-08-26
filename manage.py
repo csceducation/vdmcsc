@@ -8,7 +8,7 @@ def main():
 
     # Override default port for `runserver` command
     from django.core.management.commands.runserver import Command as runserver
-    runserver.default_port = "30001"
+    runserver.default_port = "30002"
     
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'csc_app.settings')
