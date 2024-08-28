@@ -61,17 +61,6 @@
         e.target.value = e.target.value.toUpperCase();
     }
 });
-{% if object %}
-console.log("he")
-{% else %}
-let usernamep = document.getElementById('id_username')
-
-usernamep.disabled = true
-
-document.getElementById('id_enrol_no').oninput = () => {
-  usernamep.value = document.getElementById('id_enrol_no').value
-}
-{% endif %}
 
 </script>
 {% endblock content %}
