@@ -233,9 +233,11 @@ class StudentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         del form.fields["user"]
         #form.fields['username'].widget.attrs['readonly'] = True
         #form.fields['password'].widget.attrs['readonly'] = True
-        if self.request.user.is_staff and not self.request.user.is_superuser:
-            del form.fields["username"]
-            del form.fields["password"]
+        # if self.request.user.is_staff and not self.request.user.is_superuser:
+        #     del form.fields["username"]
+        #     del form.fields["password"]
+        del form.fields["username"]
+        del form.fields["password"]
         try:
             # If enquiry_id is provided, fetch the Enquiry instance
             if enquiry_id:
@@ -357,11 +359,13 @@ class StudentUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         """add date picker in forms"""
         form = super(StudentUpdateView, self).get_form()
         del form.fields["user"]
-        form.fields['username'].widget.attrs['readonly'] = True
-        form.fields['password'].widget.attrs['readonly'] = True
-        if self.request.user.is_staff and not self.request.user.is_superuser:
-            del form.fields["username"]
-            del form.fields["password"]
+        del form.fields["username"]
+        del form.fields["password"]
+        # form.fields['username'].widget.attrs['readonly'] = True
+        # form.fields['password'].widget.attrs['readonly'] = True
+        # if self.request.user.is_staff and not self.request.user.is_superuser:
+            # del form.fields["username"]
+            # del form.fields["password"]
         form.fields["date_of_birth"].widget = widgets.DateInput(attrs={"type": "date"})
         form.fields["date_of_admission"].widget = widgets.DateInput(
             attrs={"type": "date"}

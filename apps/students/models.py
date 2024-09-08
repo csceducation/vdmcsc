@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from datetime import date
 from apps.course.models import CourseModel
 from apps.staffs.models import Staff
 from apps.corecode.models import StudentClass , Book , Subject 
@@ -11,8 +12,8 @@ from ..enquiry.models import *
 from apps.corecode.models import User
 
 class Student(models.Model):
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
+    username = models.CharField(max_length=20,blank=True)
+    password = models.CharField(max_length=20,blank=True)
     GENDER_CHOICES = [("male", "Male"), ("female", "Female"),("others","others")]
     RELIGION_CHOICE = [('Hindu','Hindu'),('Christian','Christian'),('Muslim','Muslim'),("others","others")]
     COMMUNITY_CHOICE = [('OC','OC'),('BC','BC'),('MBC','MBC'),('ST/SC','ST/SC'),("others","others")]
@@ -117,9 +118,14 @@ class Student(models.Model):
 
     def save(self, *args,from_save_update = True, **kwargs):
         if from_save_update:
-            
+            self.username = self.enrol_no
+            self.password = self.formatted_date_of_birth()
             if not self.user:
-                self.user = User.objects.create_user(username=self.username,password=self.password,is_staff=False)
+                self.user = User.objects.create_user(username=self.enrol_no,password=self.formatted_date_of_birth(),is_staff=False)
+            else:
+                self.user.username = self.enrol_no
+                self.user.set_password(self.formatted_date_of_birth())
+                self.user.save()
             super().save(*args, **kwargs)
         elif from_save_update == False:
             self.user.delete()
@@ -132,6 +138,14 @@ class Student(models.Model):
         self.save(from_save_update=False)
         super().delete(*args, **kwargs)
     
+    def formatted_date_of_birth(self):
+        # Get the date of birth
+        dob = self.date_of_birth
+
+        # Format the date as "ddmmyyyy"
+        formatted_date = dob.strftime('%d%m%Y')
+
+        return formatted_date
     
 class Bookmodel(models.Model):
     student = models.ForeignKey(Student,on_delete=models.PROTECT)
